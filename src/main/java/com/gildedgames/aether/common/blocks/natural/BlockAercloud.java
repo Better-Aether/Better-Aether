@@ -16,7 +16,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
@@ -217,14 +219,47 @@ public class BlockAercloud extends Block implements IBlockVariants
 				{
 					((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.LIGHT_BLUE);
 				}
-				else if(state.getValue(PROPERTY_VARIANT) == BlockAercloud.COLD_AERCLOUD)
+				else if (state.getValue(PROPERTY_VARIANT) == BlockAercloud.COLD_AERCLOUD)
 				{
 					((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.WHITE);
+				}
+				else if ((((EntitySheepuff) entity).getPuffed() && Block.RANDOM.nextInt(100) == 0) || (!((EntitySheepuff) entity).getPuffed() && Block.RANDOM.nextInt(100) != 0))
+				{
+					if (((EntitySheepuff) entity).getFleeceColor() == EnumDyeColor.YELLOW)
+					{
+						BlockAercloud.GOLDEN_AERCLOUD.onEntityCollision(world, pos, state, entity);
+						return;
+					}
+					else if (((EntitySheepuff) entity).getFleeceColor() == EnumDyeColor.LIME)
+					{
+						BlockAercloud.GREEN_AERCLOUD.onEntityCollision(world, pos, state, entity);
+						return;
+					}
+					else if (((EntitySheepuff) entity).getFleeceColor() == EnumDyeColor.PURPLE)
+					{
+						BlockAercloud.PURPLE_AERCLOUD.onEntityCollision(world, pos, state, entity);
+						return;
+					}
+					else if (((EntitySheepuff) entity).getFleeceColor() == EnumDyeColor.LIGHT_BLUE)
+					{
+						BlockAercloud.BLUE_AERCLOUD.onEntityCollision(world, pos, state, entity);
+						return;
+					}
+					else
+					{
+						((EntitySheepuff) entity).setPuffed(false);
+						((EntitySheepuff) entity).setSheared(true);
+						entity.setFire(1);
+						entity.playSound(SoundEvents.ENTITY_FIREWORK_LARGE_BLAST, 2.0F, 1.0F);
+						EntityItem item = new EntityItem(world, entity.posX, entity.posY, entity.posZ, new ItemStack(Blocks.WOOL, 1, ((EntitySheepuff) entity).getFleeceColor().getMetadata()));
+						world.spawnEntityInWorld(item);
+						((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.WHITE);
+					}
 				}
 				else
 				{
 					entity.setFire(10);
-					entity.onKillCommand(); //properly implement very evil special stormy aercloud here
+					entity.onKillCommand();
 					entity.playSound(SoundEvents.ENTITY_FIREWORK_LARGE_BLAST, 2.0F, 1.0F);
 				}
 			}
