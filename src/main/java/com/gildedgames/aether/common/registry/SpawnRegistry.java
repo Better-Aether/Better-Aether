@@ -9,6 +9,7 @@ import com.gildedgames.aether.common.blocks.BlocksAether;
 import com.gildedgames.aether.common.blocks.natural.BlockAetherGrass;
 import com.gildedgames.aether.common.entities.living.mobs.*;
 import com.gildedgames.aether.common.entities.living.passive.*;
+import com.gildedgames.aether.common.entities.living.mounts.*;
 import com.gildedgames.aether.common.registry.content.BiomesAether;
 import com.gildedgames.aether.common.registry.content.DimensionsAether;
 import com.gildedgames.aether.common.util.io.NBTHelper;
@@ -49,18 +50,16 @@ public class SpawnRegistry
 		final PosCondition plantCheck = new CheckBlockStateAt(Blocks.AIR.getDefaultState());
 
 		final SpawnEntry sheepuff = new SpawnEntry(EntitySheepuff.class, 10F, 3, 5).conditiion(grassCheck);
-		final SpawnEntry burrukai = new SpawnEntry(EntityBurrukai.class, 10F, 2, 3).conditiion(grassCheck);
-		final SpawnEntry ram = new SpawnEntry(EntityKirrid.class, 10F, 2, 3).conditiion(grassCheck);
+		final SpawnEntry flying_cow = new SpawnEntry(EntityFlyingCow.class, 10F, 2, 3).conditiion(grassCheck);
 		final SpawnEntry aerbunny = new SpawnEntry(EntityAerbunny.class, 13F, 3, 5).conditiion(grassCheck);
-		final SpawnEntry taegore = new SpawnEntry(EntityTaegore.class, 13F, 2, 3).conditiion(grassCheck);
+		final SpawnEntry phyg = new SpawnEntry(EntityPhyg.class, 13F, 2, 3).conditiion(grassCheck);
 		final SpawnEntry carrion_sprout = new SpawnEntry(EntityCarrionSprout.class, 10F, 2, 3).conditiion(grassCheck).conditiion(plantCheck);
 		final SpawnEntry aechor_plant = new SpawnEntry(EntityAechorPlant.class, 12F, 2, 3).conditiion(grassCheck).conditiion(plantCheck);
 
 		animals.addEntry(sheepuff);
-		animals.addEntry(burrukai);
-		animals.addEntry(ram);
+		animals.addEntry(flying_cow);
+		animals.addEntry(phyg);
 		animals.addEntry(aerbunny);
-		animals.addEntry(taegore);
 		animals.addEntry(carrion_sprout);
 		animals.addEntry(aechor_plant);
 

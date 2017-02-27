@@ -16,6 +16,7 @@ import com.gildedgames.aether.common.entities.living.mobs.EntitySwet;
 import com.gildedgames.aether.common.entities.living.mobs.EntityTempest;
 import com.gildedgames.aether.common.entities.living.mobs.EntityZephyr;
 import com.gildedgames.aether.common.entities.living.mounts.EntityFlyingCow;
+import com.gildedgames.aether.common.entities.living.mounts.EntityPhyg;
 import com.gildedgames.aether.common.entities.living.mounts.EntityMoa;
 import com.gildedgames.aether.common.entities.living.npc.EntityEdison;
 import com.gildedgames.aether.common.entities.living.passive.*;
@@ -41,6 +42,8 @@ public class EntitiesAether
 
 	public static void preInit()
 	{
+		registerLivingEntity(EntityPhyg.class, "phyg", 0xCCFFFF, 0xCCCCFF);
+		registerLivingEntity(EntityFlyingCow.class, "flying_cow", 0xCCFFFF, 0xCCCCFF);
 		registerLivingEntity(EntitySheepuff.class, "sheepuff", 0xCCFFFF, 0xCCCCFF);
 		registerLivingEntity(EntityAechorPlant.class, "aechor_plant", 0x735190, 0xaed28f);
 		registerLivingEntity(EntityAerbunny.class, "aerbunny", 0xcbe1e6, 0xe08c8c);

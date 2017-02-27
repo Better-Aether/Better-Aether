@@ -91,6 +91,12 @@ public class EntityPhyg extends EntityFlyingAnimal
 	{
 		return 5.0F;
 	}
+	
+	@Override
+	protected ResourceLocation getLootTable()
+	{
+		return LootTablesAether.ENTITY_PHYG;
+	}
 
 	@Override
 	public boolean isBreedingItem(@Nullable ItemStack stack)

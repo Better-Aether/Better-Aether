@@ -172,7 +172,7 @@ public class EntitySheepuff extends EntitySheep
 	public static EnumDyeColor getRandomSheepColor(Random random)
 	{
 		int i = random.nextInt(100);
-		return i < 6 ? EnumDyeColor.YELLOW : (i < 14 ? EnumDyeColor.LIME : (i < 26 ? EnumDyeColor.PURPLE : (i < 50 ? EnumDyeColor.LIGHT_BLUE : EnumDyeColor.WHITE)));
+		return i < 2 ? EnumDyeColor.YELLOW : (i < 6 ? EnumDyeColor.LIME : (i < 14 ? EnumDyeColor.PURPLE : (i < 26 ? EnumDyeColor.LIGHT_BLUE : EnumDyeColor.WHITE)));
 	}
 	@Override
 	public EntitySheepuff createChild(EntityAgeable ageable)
