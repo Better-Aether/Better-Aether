@@ -601,6 +601,7 @@ item.aether.valkyrie_music_disc.desc=Emile van Krieken - Ascending Dawn
 item.aether.recording_892.desc=Emile van Krieken - ???
 
 # Entities
+entity.aether.sheepuff.name=Sheepuff
 entity.aether.aechor_plant.name=Aechor Plant
 entity.aether.aerbunny.name=Aerbunny
 entity.aether.carrion_sprout.name=Carrion Sprout

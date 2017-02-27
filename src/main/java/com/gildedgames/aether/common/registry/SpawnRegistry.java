@@ -48,6 +48,7 @@ public class SpawnRegistry
 		final PosCondition grassCheck = new CheckBlockStateUnderneath(BlocksAether.aether_grass.getDefaultState(), BlocksAether.aether_grass.getDefaultState().withProperty(BlockAetherGrass.PROPERTY_VARIANT, BlockAetherGrass.ENCHANTED));
 		final PosCondition plantCheck = new CheckBlockStateAt(Blocks.AIR.getDefaultState());
 
+		final SpawnEntry sheepuff = new SpawnEntry(EntitySheepuff.class, 10F, 3, 5).conditiion(grassCheck);
 		final SpawnEntry burrukai = new SpawnEntry(EntityBurrukai.class, 10F, 2, 3).conditiion(grassCheck);
 		final SpawnEntry ram = new SpawnEntry(EntityKirrid.class, 10F, 2, 3).conditiion(grassCheck);
 		final SpawnEntry aerbunny = new SpawnEntry(EntityAerbunny.class, 13F, 3, 5).conditiion(grassCheck);
@@ -55,6 +56,7 @@ public class SpawnRegistry
 		final SpawnEntry carrion_sprout = new SpawnEntry(EntityCarrionSprout.class, 10F, 2, 3).conditiion(grassCheck).conditiion(plantCheck);
 		final SpawnEntry aechor_plant = new SpawnEntry(EntityAechorPlant.class, 12F, 2, 3).conditiion(grassCheck).conditiion(plantCheck);
 
+		animals.addEntry(sheepuff);
 		animals.addEntry(burrukai);
 		animals.addEntry(ram);
 		animals.addEntry(aerbunny);

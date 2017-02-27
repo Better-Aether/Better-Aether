@@ -4,6 +4,7 @@ import com.gildedgames.aether.common.blocks.BlocksAether;
 import com.gildedgames.aether.common.blocks.util.variants.IBlockVariants;
 import com.gildedgames.aether.common.blocks.util.variants.blockstates.BlockVariant;
 import com.gildedgames.aether.common.blocks.util.variants.blockstates.PropertyVariant;
+import com.gildedgames.aether.common.entities.living.passive.EntitySheepuff;
 import com.gildedgames.aether.common.registry.content.DimensionsAether;
 import com.gildedgames.aether.common.registry.content.SoundsAether;
 import net.minecraft.block.Block;
@@ -16,6 +17,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -190,9 +193,41 @@ public class BlockAercloud extends Block implements IBlockVariants
 
 		boolean canCollide = !entity.isSneaking();
 
-		if (canCollide && entity instanceof EntityPlayer)
+		if (canCollide)
 		{
-			canCollide = !((EntityPlayer) entity).capabilities.isFlying;
+			if (entity instanceof EntityPlayer)
+			{
+				canCollide = !((EntityPlayer) entity).capabilities.isFlying;
+			}
+			else if (entity instanceof EntitySheepuff && ((EntitySheepuff) entity).getHealth() > 0 && !((EntitySheepuff) entity).getSheared())
+			{
+				if (state.getValue(PROPERTY_VARIANT) == BlockAercloud.GOLDEN_AERCLOUD)
+				{
+					((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.YELLOW);
+				}
+				else if (state.getValue(PROPERTY_VARIANT) == BlockAercloud.GREEN_AERCLOUD)
+				{
+					((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.LIME);
+				}
+				else if (state.getValue(PROPERTY_VARIANT) == BlockAercloud.PURPLE_AERCLOUD)
+				{
+					((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.PURPLE);
+				}
+				else if (state.getValue(PROPERTY_VARIANT) == BlockAercloud.BLUE_AERCLOUD)
+				{
+					((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.LIGHT_BLUE);
+				}
+				else if(state.getValue(PROPERTY_VARIANT) == BlockAercloud.COLD_AERCLOUD)
+				{
+					((EntitySheepuff) entity).setFleeceColor(EnumDyeColor.WHITE);
+				}
+				else
+				{
+					entity.setFire(10);
+					entity.onKillCommand(); //properly implement very evil special stormy aercloud here
+					entity.playSound(SoundEvents.ENTITY_FIREWORK_LARGE_BLAST, 2.0F, 1.0F);
+				}
+			}
 		}
 
 		AercloudVariant variant = canCollide ? (AercloudVariant) state.getValue(PROPERTY_VARIANT) : BlockAercloud.COLD_AERCLOUD;

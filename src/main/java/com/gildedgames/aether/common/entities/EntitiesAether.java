@@ -41,6 +41,7 @@ public class EntitiesAether
 
 	public static void preInit()
 	{
+		registerLivingEntity(EntitySheepuff.class, "sheepuff", 0xCCFFFF, 0xCCCCFF);
 		registerLivingEntity(EntityAechorPlant.class, "aechor_plant", 0x735190, 0xaed28f);
 		registerLivingEntity(EntityAerbunny.class, "aerbunny", 0xcbe1e6, 0xe08c8c);
 		registerLivingEntity(EntityCarrionSprout.class, "carrion_sprout", 0xcad9e9, 0x93b1d1);
