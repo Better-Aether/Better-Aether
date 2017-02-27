@@ -1,3 +1,12 @@
+# Better Aether
+Hello and welcome to the Better Aether project's page, aimed to provide you with information as to what's this bizarre fork.
+
+Better Aether is a fork of <a href="https://git.gildedgames.com/GildedGames/Aether-II">Aether II</a> intended to port many of the <a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1275355">Aether Collaboration Mod</a>'s features to Aether II, often further improving them, while keeping the fresh feeling Aether II gives.
+
+Under this line is given the original README.md of Aether II as of 2017-02-26 UTC.
+
+---
+
 ### Help support Gilded Games make mods and games on Patreon!
 You'll gain access to exclusive rewards and snapshot builds of the Aether Rewrite before anyone else!
 <br><br>
