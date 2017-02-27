@@ -26,7 +26,7 @@ allprojects {
 
 version = "${config.mod_version}"
 group = "com.gildedgames.aether"
-archivesBaseName = "AetherII"
+archivesBaseName = "Better-Aether"
 
 ext.ciVersion = System.getenv("BUILD_VERSION")
 ext.gitVersion = repo.head().abbreviatedId
