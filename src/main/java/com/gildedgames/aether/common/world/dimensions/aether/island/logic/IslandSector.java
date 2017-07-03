@@ -10,7 +10,7 @@ import java.util.List;
 public class IslandSector implements NBT
 {
 
-	public final static int CHUNK_WIDTH_PER_SECTOR = 40;
+	public final static int CHUNK_WIDTH_PER_SECTOR = 20;//distance between islands, bounds too
 
 	private int sectorX, sectorY;
 

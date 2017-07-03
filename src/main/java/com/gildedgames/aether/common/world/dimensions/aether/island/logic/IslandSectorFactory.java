@@ -24,9 +24,9 @@ public class IslandSectorFactory
 		{
 			final int sectorArea = IslandSector.CHUNK_WIDTH_PER_SECTOR * 16;
 
-			int width = 640;
-			int height = 120;
-			int length = 640;
+			int width = rand.nextInt(320) + 320;
+			int height = rand.nextInt(80) + 60;
+			int length = rand.nextInt(320) + 320;
 
 			int x = (sectorArea * sectorX);
 			int y = 10;
@@ -46,7 +46,7 @@ public class IslandSectorFactory
 		return sector;
 	}
 
-	private static IslandData[] separate(IslandData[] data, int sectorX, int sectorY, int seperationIterations)
+	/*private static IslandData[] separate(IslandData[] data, int sectorX, int sectorY, int seperationIterations)
 	{
 		for (int iter = 0; iter < seperationIterations; iter++)//This part uses separation behavior to separate intersecting islands
 		{
@@ -165,6 +165,6 @@ public class IslandSectorFactory
 		}
 
 		return data;
-	}
+	}*/
 
 }
