@@ -5,7 +5,6 @@ import com.gildedgames.aether.common.blocks.BlocksAether;
 import com.gildedgames.aether.common.registry.content.DimensionsAether;
 import com.gildedgames.aether.common.world.dimensions.aether.biomes.BiomeProviderAether;
 import com.gildedgames.aether.common.world.dimensions.aether.island.ChunkGeneratorIsland;
-import com.gildedgames.aether.common.world.dimensions.aether.ChunkGeneratorAetherOld;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
