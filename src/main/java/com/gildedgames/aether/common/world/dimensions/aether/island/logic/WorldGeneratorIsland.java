@@ -1,222 +1,160 @@
 package com.gildedgames.aether.common.world.dimensions.aether.island.logic;
 
 import com.gildedgames.aether.common.blocks.BlocksAether;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import com.gildedgames.aether.common.world.dimensions.aether.biomes.BiomeAetherBase;
+import com.gildedgames.aether.common.world.noise.OpenSimplexNoise;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.gen.NoiseGeneratorOctaves;
-
-import java.util.Random;
 
 public class WorldGeneratorIsland
 {
 
-	private double[][] noiseFields;
-
-	private NoiseGeneratorOctaves[] octaveNoiseGenerators;
-
-	private final Random rand;
-
 	private final World world;
+
+	private final OpenSimplexNoise simplex;
 
 	public WorldGeneratorIsland(World world)
 	{
 		this.world = world;
-		this.rand = new Random(world.getSeed());
-
-		this.noiseFields = new double[9][];
-
-		this.noiseFields[1] = new double[256];
-		this.noiseFields[2] = new double[256];
-		this.noiseFields[3] = new double[256];
-
-		this.octaveNoiseGenerators = new NoiseGeneratorOctaves[7];
-
-		this.octaveNoiseGenerators[0] = new NoiseGeneratorOctaves(this.rand, 16);
-		this.octaveNoiseGenerators[1] = new NoiseGeneratorOctaves(this.rand, 16);
-		this.octaveNoiseGenerators[2] = new NoiseGeneratorOctaves(this.rand, 32);
-		this.octaveNoiseGenerators[3] = new NoiseGeneratorOctaves(this.rand, 64);
-		this.octaveNoiseGenerators[4] = new NoiseGeneratorOctaves(this.rand, 4);
-		this.octaveNoiseGenerators[5] = new NoiseGeneratorOctaves(this.rand, 10);
-		this.octaveNoiseGenerators[6] = new NoiseGeneratorOctaves(this.rand, 16);
+		this.simplex = new OpenSimplexNoise(world.getSeed());
 	}
 
-	public void setBlocksInChunk(ChunkPrimer primer, IslandData data, IslandSector sector, int chunkX, int chunkZ)
+	public double getBias(double time, double bias)
 	{
-		final int dimXZ = 2;
-		final int dimXZPlusOne = dimXZ + 1;
+		return (time / ((((1.0/bias) - 2.0)*(1.0 - time))+1.0));
+	}
 
-		final int dimY = 32;
-		final int dimYPlusOne = dimY + 1;
+	public void genIslandForChunk(ChunkPrimer primer, IslandData data, IslandSector sector, int chunkX, int chunkZ)
+	{
+		//Stopwatch watch = Stopwatch.createStarted();
+
+		int posX = chunkX * 16;
+		int posZ = chunkZ * 16;
 
 		double width = (double) data.getBounds().width;
 		double height = data.getHeight();
 		double length = (double) data.getBounds().height;
 
-		this.noiseFields[0] = this.initializeNoiseField(this.noiseFields[0], chunkX * dimXZ, 0, chunkZ * dimXZ, dimXZPlusOne, dimYPlusOne, dimXZPlusOne);
+		Biome biome = this.world.getBiome(new BlockPos(posX + 16, 0, posZ + 16));
 
-		int posX = chunkX * 16;
-		int posZ = chunkZ * 16;
+		double minY = data.getMinY();
 
-		for (int x = 0; x < dimXZ; x++)
+		for (double x = 0; x < 16; x++)
 		{
-			for (int z = 0; z < dimXZ; z++)
+			for (double z = 0; z < 16; z++)
 			{
-				for (int y = 0; y < dimY; y++)
+				double stepX = (double) posX + x;
+				double stepZ = (double) posZ + z;
+
+				double nx = (stepX + data.getBounds().getMinX()) / 300.0; // normalize coords
+				double nz = (stepZ + data.getBounds().getMinY()) / 300.0;
+
+				//double flat = GenUtil.octavedNoise(this.simplex, 4, 0.7D, 2.5D, nx, nz);
+
+				double distNX = ((stepX - data.getBounds().getMinX()) / width) - 0.5; // Subtract sector coords from nx/ny so that the noise is within range of the island center
+				double distNZ = ((stepZ - data.getBounds().getMinY()) / length) - 0.5;
+
+				double noise1 = this.simplex.eval(nx, nz);
+				double noise2 = 0.5 * this.simplex.eval(nx * 8D, nz * 8D);
+				double noise3 = 0.25 * this.simplex.eval(nx * 16D, nz * 16D);
+				double noise4 = 0.1 * this.simplex.eval(nx * 32D, nz * 32D);
+
+				double value = (noise1 + noise2 + noise3 + noise4) / 4.0;
+
+				double dist = 2.0 * Math.sqrt((distNX * distNX) + (distNZ * distNZ)); // Get distance from center of Island
+
+				value = (value + 0.0) - (0.7 * Math.pow(dist, 4)); // Apply formula to shape noise into island, noise decreases in value the further the coord is from the center
+
+				double heightValue = value + 1.0;//Math.pow(value, 0.7);
+
+				double bottomHeight = 0.8 * height;
+				double bottomMaxY = minY + bottomHeight;
+
+				double topHeight = 0.2 * height;
+
+				double cutoffPoint = 0.8;
+
+				double bottomHeightMod = Math.min(1.0, (heightValue - cutoffPoint) * 1.4);
+
+				if (heightValue > cutoffPoint)
 				{
-					double minXMinZ = this.noiseFields[0][(x * dimXZPlusOne + z) * dimYPlusOne + y];
-					double minXMaxZ = this.noiseFields[0][(x * dimXZPlusOne + z + 1) * dimYPlusOne + y];
-					double maxXMinZ = this.noiseFields[0][((x + 1) * dimXZPlusOne + z) * dimYPlusOne + y];
-					double maxXMaxZ = this.noiseFields[0][((x + 1) * dimXZPlusOne + z + 1) * dimYPlusOne + y];
-
-					double dMinXMinZ = (this.noiseFields[0][(x * dimXZPlusOne + z) * dimYPlusOne + y + 1] - minXMinZ) / 4;
-					double dMinXMaxZ = (this.noiseFields[0][(x * dimXZPlusOne + z + 1) * dimYPlusOne + y + 1] - minXMaxZ) / 4;
-					double dMaxXMinZ = (this.noiseFields[0][((x + 1) * dimXZPlusOne + z) * dimYPlusOne + y + 1] - maxXMinZ) / 4;
-					double dMaxXMaxZ = (this.noiseFields[0][((x + 1) * dimXZPlusOne + z + 1) * dimYPlusOne + y + 1] - maxXMaxZ) / 4;
-
-					for (int yIter = 0; yIter < 4; yIter++)
+					for (double y = bottomMaxY; y > bottomMaxY - (bottomHeight * bottomHeightMod); y--)
 					{
-						double d10 = minXMinZ;
-						double d11 = minXMaxZ;
-						double d12 = (maxXMinZ - minXMinZ) / 8;
-						double d13 = (maxXMaxZ - minXMaxZ) / 8;
-
-						for (int xIter = 0; xIter < 8; xIter++)
+						if (heightValue < cutoffPoint + 0.05 && y == bottomMaxY - 1)
 						{
-							//Small essay about indices.
-							//If you look inside the ChunkPrimer class, you'll see it can contain 65536 elements.
-							//So yeah... 16 x 256 x 16!
-
-							double d15 = d10;
-							double d16 = (d11 - d10) / 8;
-
-							for (int zIter = 0; zIter < 8; zIter++)
+							if (biome instanceof BiomeAetherBase)
 							{
-								int blockX = xIter + x * 8;
-								int blockY = 40 + (yIter + y * 4);
-								int blockZ = zIter + z * 8;
+								BiomeAetherBase aetherBiome = (BiomeAetherBase)biome;
 
-								IBlockState fillBlock = Blocks.AIR.getDefaultState();
-
-								/*double distNX = blockX - (double) (sector.getSectorX() * IslandSector.CHUNK_WIDTH_PER_SECTOR) - (data.getBounds().getWidth() / 2); // Subtract sector coords from nx/ny so that the noise is within range of the island center
-								double distNZ = blockZ - (double) (sector.getSectorY() * IslandSector.CHUNK_WIDTH_PER_SECTOR) - (data.getBounds().getHeight() / 2);
-								double ny = blockY - (data.getHeight() / 2);
-
-								double dist = Math.sqrt((distNX * distNX) + (ny * ny) + (distNZ * distNZ)); // Get distance from center of Island
-
-								double volume = (data.getHeight() + data.getBounds().getWidth()) / 2;
-
-								double value = d15 - (dist / 300);*/
-
-								double stepX = (double) posX + blockX;
-								double stepZ = (double) posZ + blockZ;
-
-								double nx = (stepX + data.getBounds().getMinX()) / 300.0; // normalize coords
-								double nz = (stepZ + data.getBounds().getMinY()) / 300.0;
-
-								//double flat = GenUtil.octavedNoise(this.simplex, 4, 0.7D, 2.5D, nx, nz);
-
-								double distNX = ((stepX - data.getBounds().getMinX()) / width) - 0.5; // Subtract sector coords from nx/ny so that the noise is within range of the island center
-								double distNZ = ((stepZ - data.getBounds().getMinY()) / length) - 0.5;
-
-								double dist = 2.0 * Math.sqrt((distNX * distNX) + (distNZ * distNZ)); // Get distance from center of Island
-
-								//d15 = (d15 + 0.0) - (0.7 * Math.pow(dist, 4));
-
-								if (d15 - (25 * dist) > -15.8D)
-								{
-									fillBlock = BlocksAether.holystone.getDefaultState();
-								}
-
-								primer.setBlockState(blockX, blockY, blockZ, fillBlock);
-								d15 += d16;
+								primer.setBlockState((int) x, (int) y, (int) z, aetherBiome.getCoastalBlock());
 							}
-
-							d10 += d12;
-							d11 += d13;
 						}
+						else
+						{
+							primer.setBlockState((int) x, (int) y, (int) z, BlocksAether.holystone.getDefaultState());
+						}
+					}
 
-						minXMinZ += dMinXMinZ;
-						minXMaxZ += dMinXMaxZ;
-						maxXMinZ += dMaxXMinZ;
-						maxXMaxZ += dMaxXMaxZ;
+					for (double y = bottomMaxY; y < bottomMaxY + ((heightValue - cutoffPoint) * topHeight); y++)
+					{
+						if (heightValue < cutoffPoint + 0.05 && y < bottomMaxY + 1)
+						{
+							if (biome instanceof BiomeAetherBase)
+							{
+								BiomeAetherBase aetherBiome = (BiomeAetherBase)biome;
+
+								primer.setBlockState((int) x, (int) y, (int) z, aetherBiome.getCoastalBlock());
+							}
+						}
+						else
+						{
+							primer.setBlockState((int) x, (int) y, (int) z, BlocksAether.holystone.getDefaultState());
+						}
 					}
 				}
-			}
-		}
-	}
 
-	private double[] initializeNoiseField(double[] inputDoubles, int x, int y, int z, int width, int height, int length)
-	{
-		if (inputDoubles == null)
-		{
-			inputDoubles = new double[width * height * length];
-		}
-
-		double const1 = 684.41200000000003D * 2.0D;
-		double const2 = 684.41200000000003D;
-
-		this.noiseFields[4] = this.octaveNoiseGenerators[2].generateNoiseOctaves(this.noiseFields[4], x, y, z, width, height, length, const1 / 20D, const2 / 160D, const1 / 80D);
-		this.noiseFields[5] = this.octaveNoiseGenerators[0].generateNoiseOctaves(this.noiseFields[5], x, y, z, width, height, length, const1, const2, const1);
-		this.noiseFields[6] = this.octaveNoiseGenerators[1].generateNoiseOctaves(this.noiseFields[6], x, y, z, width, height, length, const1, const2, const1);
-
-		this.noiseFields[7] = this.octaveNoiseGenerators[5].generateNoiseOctaves(this.noiseFields[7], x, z, width, length, 1.121D, 1.121D, 0.5D);//Note: The last argument is never used
-		this.noiseFields[8] = this.octaveNoiseGenerators[6].generateNoiseOctaves(this.noiseFields[8], x, z, width, length, 20D, 20D, 0.5D);
-
-		int index = 0;
-
-		for (int x1 = 0; x1 < width; x1++)
-		{
-			for (int z1 = 0; z1 < length; z1++)
-			{
-				for (int y1 = 0; y1 < height; y1++)
+				for (double y = minY + (height * 0.5); y < minY + height; y++)
 				{
-					double finalHeight;
+					double stepY = y - minY - (height * 0.55);
 
-					double sample1 = this.noiseFields[5][index] / 512D;
-					double sample2 = this.noiseFields[6][index] / 512D;
-					double sample3 = (this.noiseFields[4][index] / 10D + 1.0D) / 2D;
+					double ny = (stepY) / (height - (height * 0.55)) - 0.5;
 
-					if (sample3 < 0.0D)
+					double noise3d1 = this.simplex.eval(nx * 8.0, ny * 8.0 / 1.8, nz * 8.0);
+					double noise3d2 = 0.5 * this.simplex.eval(nx * 16.0, ny * 16.0 / 1.8, nz * 16.0);
+
+					double value3d = noise3d1 + noise3d2;
+
+					double dist3d = 2.0 * Math.sqrt((distNX * distNX) + (ny * ny) + (distNZ * distNZ)); // Get distance from center of Island
+
+					value3d = (value3d + 0.10) - (1.65 * Math.pow(dist3d, 1.50)); // Apply formula to shape noise into island, noise decreases in value the further the coord is from the center
+
+					value3d -= dist;
+
+					value3d = Math.min(1.0D, Math.max(-1.0D, value3d)); // Prevents noise from dropping below its minimum value
+
+					if (value3d > -0.8)
 					{
-						finalHeight = sample1;
-					}
-					else if (sample3 > 1.0D)
-					{
-						finalHeight = sample2;
-					}
-					else
-					{
-						finalHeight = sample1 + (sample2 - sample1) * sample3;
-					}
+						//if (y < bottomMaxY + ((heightValue - 0.8) * topHeight))
+						//{
+						/*if (y < bottomMaxY + 2)
+						{
+							primer.setBlockState((int) x, (int) y, (int) z, BlocksAether.quicksoil.getDefaultState());
+						}
+						else*/
+						{
+							primer.setBlockState((int) x, (int) y, (int) z, BlocksAether.holystone.getDefaultState());
+						}
+						//}
 
-					finalHeight -= 20D;
-
-					if (y1 > height - 32)//If y1 > 1
-					{
-						double dy = (y1 - (height - 32)) / 31D;
-						finalHeight = finalHeight * (1.0D - dy) + -30D * dy;//
+						//primer.setBlockState((int) x, (int) y, (int) z, BlocksAether.holystone.getDefaultState());
 					}
-
-					if (y1 < 8)
-					{
-						double dy = (8 - y1) / 7D;
-						finalHeight = finalHeight * (1.0D - dy) + -30D * dy;
-					}
-
-					inputDoubles[index] = finalHeight;
-					index++;
 				}
 			}
 		}
 
-		return inputDoubles;
-	}
-
-	public void genIslandForChunk(ChunkPrimer primer, IslandData data, IslandSector sector, int chunkX, int chunkZ)
-	{
-		this.setBlocksInChunk(primer, data, sector, chunkX, chunkZ);
+		//System.out.println(watch.stop());
 	}
 
 }
