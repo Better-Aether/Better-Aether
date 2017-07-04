@@ -23,7 +23,7 @@ public class IslandSectorFactory
 		for (int i = 0; i < islandCount; i++)
 		{
 			int width = rand.nextInt(320) + 320;
-			int height = rand.nextInt(80) + 60;
+			int height = rand.nextInt(80) + 40;
 			int length = rand.nextInt(320) + 320;
 
 			int x = (width * sectorX);
