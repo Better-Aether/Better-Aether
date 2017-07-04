@@ -22,13 +22,14 @@ public class IslandSectorFactory
 
 		for (int i = 0; i < islandCount; i++)
 		{
+			final int sectorArea = IslandSector.CHUNK_WIDTH_PER_SECTOR * 16;
 			int width = rand.nextInt(320) + 320;
 			int height = rand.nextInt(80) + 40;
 			int length = rand.nextInt(320) + 320;
 
-			int x = (width * sectorX);
+			int x = (sectorArea * sectorX);
 			int y = 10;
-			int z = (length * sectorY);
+			int z = (sectorArea * sectorY);
 
 			Rectangle bounds = new Rectangle(x, z, width, length);
 
