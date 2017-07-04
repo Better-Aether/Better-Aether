@@ -4,7 +4,6 @@ import com.gildedgames.aether.client.util.NOOPRenderHandler;
 import com.gildedgames.aether.common.blocks.BlocksAether;
 import com.gildedgames.aether.common.registry.content.DimensionsAether;
 import com.gildedgames.aether.common.world.dimensions.aether.biomes.BiomeProviderAether;
-import com.gildedgames.aether.common.world.dimensions.aether.island.ChunkGeneratorIsland;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -55,7 +54,7 @@ public class WorldProviderAether extends WorldProviderSurface
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkGeneratorIsland(this.worldObj, this.worldObj.getSeed());
+		return new ChunkGeneratorAether(this.worldObj, this.worldObj.getSeed());
 	}
 
 	public BlockPos getTopBlockPos(BlockPos pos)
