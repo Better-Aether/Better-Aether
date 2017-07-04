@@ -15,9 +15,6 @@ import com.gildedgames.aether.common.world.dimensions.aether.features.WorldGenQu
 import com.gildedgames.aether.common.world.dimensions.aether.features.aerclouds.WorldGenAercloud;
 import com.gildedgames.aether.common.world.dimensions.aether.features.aerclouds.WorldGenPurpleAercloud;
 import com.gildedgames.aether.common.world.dimensions.aether.features.trees.WorldGenOrangeTree;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandData;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandSector;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandSectorAccess;
 import com.google.common.collect.Lists;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
@@ -106,48 +103,7 @@ public class BiomeAetherDecorator
 
 		int count;
 
-		int sectorX = IslandSectorAccess.inst().getSectorCoord(chunkX);
-		int sectorY = IslandSectorAccess.inst().getSectorCoord(chunkZ);
-
-		IslandSector sector = IslandSectorAccess.inst().attemptToLoadSector(world, sectorX, sectorY);
-
-		if (sector == null)
-		{
-			return;
-		}
-
-		final List<IslandData> islandsToGenerate = Lists.newArrayList();
-
-		for (x = 0; x < 16; x++)
-		{
-			for (z = 0; z < 16; z++)
-			{
-				List<IslandData> islands = sector.getIslandDataAtBlockPos(pos.getX() + x, pos.getZ() + z);
-
-				if (islands.size() <= 0)
-				{
-					continue;
-				}
-
-				for (IslandData data : islands)
-				{
-					if (!islandsToGenerate.contains(data))
-					{
-						islandsToGenerate.add(data);
-					}
-				}
-			}
-		}
-
-		boolean oneIslandOnly = islandsToGenerate.size() == 1;
-		IslandData island = null;
-
-		if (oneIslandOnly)
-		{
-			island = islandsToGenerate.get(0);
-		}
-
-		// Mysterious Henge
+		/*// Mysterious Henge
 		if (oneIslandOnly && island.getMysteriousHengePos() == null)
 		{
 			boolean generated = false;
@@ -199,7 +155,7 @@ public class BiomeAetherDecorator
 					break;
 				}
 			}
-		}
+		}*/
 
 		// Moa Nests
 		if (random.nextInt(4) == 0)

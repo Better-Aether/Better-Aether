@@ -15,7 +15,6 @@ import com.gildedgames.aether.common.registry.SimpleRecipesAether;
 import com.gildedgames.aether.common.registry.content.DimensionsAether;
 import com.gildedgames.aether.common.world.dimensions.aether.TeleporterAether;
 import com.gildedgames.aether.common.registry.SpawnRegistry;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandSectorAccess;
 import com.gildedgames.aether.common.util.io.ClassSerializer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
@@ -73,7 +72,7 @@ public class AetherCore implements IAetherServices
 		AetherCore.CONFIG = new ConfigAether(event.getSuggestedConfigurationFile());
 
 		MinecraftForge.EVENT_BUS.register(AetherCore.CONFIG);
-		MinecraftForge.EVENT_BUS.register(IslandSectorAccess.inst());
+		//MinecraftForge.EVENT_BUS.register(IslandSectorAccess.inst());
 		MinecraftForge.EVENT_BUS.register(InstanceEvents.class);
 		MinecraftForge.EVENT_BUS.register(QuicksoilProcessor.class);
 
@@ -94,7 +93,7 @@ public class AetherCore implements IAetherServices
 		DimensionsAether.onServerStopping(event);
 
 		AetherCore.SPAWN_REGISTRY.write();
-		IslandSectorAccess.inst().onServerStopping(event);
+		//IslandSectorAccess.inst().onServerStopping(event);
 		InstanceEvents.saveAllInstancesToDisk();
 	}
 

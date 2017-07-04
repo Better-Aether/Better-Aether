@@ -37,8 +37,6 @@ import com.gildedgames.aether.common.registry.content.*;
 import com.gildedgames.aether.common.registry.minecraft.*;
 import com.gildedgames.aether.common.tiles.TileEntitiesAether;
 import com.gildedgames.aether.common.util.TickTimer;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandData;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandSector;
 import com.gildedgames.aether.common.world.dungeon.instance.DungeonInstance;
 import com.gildedgames.aether.common.world.dungeon.instance.DungeonInstanceFactory;
 import com.gildedgames.aether.common.world.dungeon.instance.DungeonInstanceHandler;
@@ -119,8 +117,8 @@ public class CommonProxy
 		AetherCore.srl().registerSerialization(5, ThirdStageSlider.class, new Instantiator(ThirdStageSlider.class));
 		AetherCore.srl().registerSerialization(6, BreakFloorActionSlider.class, new Instantiator(BreakFloorActionSlider.class));
 		AetherCore.srl().registerSerialization(7, SimpleBossManager.class, new Instantiator(SimpleBossManager.class));
-		AetherCore.srl().registerSerialization(8, IslandSector.class, new Instantiator(IslandSector.class));
-		AetherCore.srl().registerSerialization(9, IslandData.class, new Instantiator(IslandData.class));
+		//AetherCore.srl().registerSerialization(8, IslandSector.class, new Instantiator(IslandSector.class));
+		//AetherCore.srl().registerSerialization(9, IslandData.class, new Instantiator(IslandData.class));
 		AetherCore.srl().registerSerialization(10, ItemSlot.class, new Instantiator(ItemSlot.class));
 	}
 

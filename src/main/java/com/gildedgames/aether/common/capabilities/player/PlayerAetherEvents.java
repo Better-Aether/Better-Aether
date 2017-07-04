@@ -3,30 +3,23 @@ package com.gildedgames.aether.common.capabilities.player;
 import com.gildedgames.aether.api.capabilites.AetherCapabilities;
 import com.gildedgames.aether.api.capabilites.chunk.IPlacementFlagCapability;
 import com.gildedgames.aether.api.player.IPlayerAetherCapability;
-import com.gildedgames.aether.common.AetherCore;
 import com.gildedgames.aether.common.CommonEvents;
 import com.gildedgames.aether.common.capabilities.player.modules.EquipmentModule;
-import com.gildedgames.aether.common.network.AetherGuiHandler;
 import com.gildedgames.aether.common.network.packets.DiedInAetherPacket;
 import com.gildedgames.aether.common.network.packets.EquipmentChangedPacket;
 import com.gildedgames.aether.common.registry.content.DimensionsAether;
 import com.gildedgames.aether.common.items.companions.ItemDeathSeal;
 import com.gildedgames.aether.common.network.NetworkingAether;
-import com.gildedgames.aether.common.util.helpers.BlockUtil;
 import com.gildedgames.aether.common.world.chunk.hooks.capabilities.ChunkAttachmentCapability;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandData;
-import com.gildedgames.aether.common.world.dimensions.aether.island.logic.IslandSectorAccess;
 import com.gildedgames.aether.common.world.util.TeleporterGeneric;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
@@ -44,8 +37,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-
-import java.util.List;
 
 public class PlayerAetherEvents
 {
@@ -250,12 +241,12 @@ public class PlayerAetherEvents
 
 			if (bedPos == null)
 			{
-				List<IslandData> islands = IslandSectorAccess.inst().getAllIslands(mp.worldObj, aePlayer.getAetherDeathPos());
+				//List<IslandData> islands = IslandSectorAccess.inst().getAllIslands(mp.worldObj, aePlayer.getAetherDeathPos());
 
-				boolean shouldSpawnAtHenge = false;
+				//boolean shouldSpawnAtHenge = false;
 				boolean obstructed = false;
 
-				IslandData island = null;
+				/*IslandData island = null;
 
 				for (IslandData data : islands)
 				{
@@ -266,11 +257,11 @@ public class PlayerAetherEvents
 
 						break;
 					}
-				}
+				}*/
 
 				BlockPos pos = null;
 
-				if (shouldSpawnAtHenge)
+				/*if (shouldSpawnAtHenge)
 				{
 					pos = BlockUtil.getTopSolidOrLiquidBlockFromY(mp.getServerWorld(), island.getMysteriousHengePos().add(2.5, 0, 2.5));
 
@@ -287,7 +278,7 @@ public class PlayerAetherEvents
 
 					mp.connection.setPlayerLocation(pos.getX(), pos.getY() + 1, pos.getZ(), 0, 0);
 				}
-				else
+				else*/
 				{
 					Teleporter teleporter = new TeleporterGeneric(toWorld);
 
